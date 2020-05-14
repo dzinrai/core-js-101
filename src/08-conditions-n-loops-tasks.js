@@ -90,8 +90,11 @@ function getSumBetweenNumbers(n1, n2) {
  *   10,1,1   =>  false
  *   10,10,10 =>  true
  */
-function isTriangle(/* a, b, c */) {
-  throw new Error('Not implemented');
+function isTriangle(a, b, c) {
+  if (a + b <= c) return false;
+  if (a + c <= b) return false;
+  if (b + c <= a) return false;
+  return true;
 }
 
 
@@ -127,8 +130,10 @@ function isTriangle(/* a, b, c */) {
  *   { top:20, left:20, width: 20, height: 20 }    =>  false
  *
  */
-function doRectanglesOverlap(/* rect1, rect2 */) {
-  throw new Error('Not implemented');
+function doRectanglesOverlap(r1, r2) {
+  if (r1.top > r2.top + r2.height || r1.left > r2.left + r2.width) return false;
+  if (r2.top > r1.top + r1.height || r2.left > r1.left + r1.width) return false;
+  return true;
 }
 
 
@@ -158,8 +163,11 @@ function doRectanglesOverlap(/* rect1, rect2 */) {
  *   { center: { x:0, y:0 }, radius:10 },  { x:10, y:10 }   => false
  *
  */
-function isInsideCircle(/* circle, point */) {
-  throw new Error('Not implemented');
+function isInsideCircle(circle, point) {
+  if ((point.x - circle.center.x) ** 2 + (point.y - circle.center.y) ** 2 < circle.radius ** 2) {
+    return true;
+  }
+  return false;
 }
 
 
@@ -174,8 +182,28 @@ function isInsideCircle(/* circle, point */) {
  *   'abracadabra'  => 'c'
  *   'entente' => null
  */
-function findFirstSingleChar(/* str */) {
-  throw new Error('Not implemented');
+function checkS(str, l) {
+  const i = str.indexOf(l);
+  if (i < 0) return str;
+  let newS = str;
+  if (i === 0) newS = newS.slice(1);
+  else if (i < newS.length - 1) newS = newS.slice(0, i).concat(newS.slice(i + 1));
+  else newS = newS.slice(-1);
+  return newS;
+}
+function findFirstSingleChar(str) {
+  let string = str;
+  string = string.split(' ');
+  string = string.join('');
+  string = string.split('');
+  let checker = null;
+  let i = 0;
+  while (i < string.length && !checker) {
+    const newStr = checkS(string, string[i]);
+    if (!newStr.includes(string[i])) checker = string[i];
+    i += 1;
+  }
+  return checker;
 }
 
 
@@ -201,8 +229,10 @@ function findFirstSingleChar(/* str */) {
  *   5, 3, true, true   => '[3, 5]'
  *
  */
-function getIntervalString(/* a, b, isStartIncluded, isEndIncluded */) {
-  throw new Error('Not implemented');
+function getIntervalString(a, b, isStartIncluded, isEndIncluded) {
+  let res = [a, b].sort((x, y) => x - y);
+  res = `${isStartIncluded ? '[' : '('}${res[0]}, ${res[1]}${isEndIncluded ? ']' : ')'}`;
+  return res;
 }
 
 
@@ -218,8 +248,9 @@ function getIntervalString(/* a, b, isStartIncluded, isEndIncluded */) {
  * 'rotator' => 'rotator'
  * 'noon' => 'noon'
  */
-function reverseString(/* str */) {
-  throw new Error('Not implemented');
+function reverseString(str) {
+  const res = str.split('');
+  return res.reverse().join('');
 }
 
 
@@ -235,8 +266,9 @@ function reverseString(/* str */) {
  *   87354 => 45378
  *   34143 => 34143
  */
-function reverseInteger(/* num */) {
-  throw new Error('Not implemented');
+function reverseInteger(num) {
+  const res = String(num).split('');
+  return parseInt(res.reverse().join(''), 10);
 }
 
 
@@ -260,8 +292,18 @@ function reverseInteger(/* num */) {
  *   5436468789016589 => false
  *   4916123456789012 => false
  */
-function isCreditCardNumber(/* ccn */) {
-  throw new Error('Not implemented');
+function isCreditCardNumber(ccn) {
+  const value = String(ccn).split('').reverse();
+  let sum = 0;
+  let even = false;
+  value.forEach((num) => {
+    let digit = parseInt(num, 10);
+    if (even) digit *= 2;
+    if (digit > 9) digit -= 9;
+    even = !even;
+    sum += digit;
+  });
+  return (sum % 10) === 0;
 }
 
 /**
@@ -278,8 +320,15 @@ function isCreditCardNumber(/* ccn */) {
  *   10000 ( 1+0+0+0+0 = 1 ) => 1
  *   165536 (1+6+5+5+3+6 = 26,  2+6 = 8) => 8
  */
-function getDigitalRoot(/* num */) {
-  throw new Error('Not implemented');
+function convertToArrayOfInt(num) {
+  let value = String(num).split('');
+  value = value.map((n) => parseInt(n, 10)).reduce((a, b) => a + b);
+  if (value >= 10) value = convertToArrayOfInt(value);
+  return value;
+}
+function getDigitalRoot(num) {
+  const value = convertToArrayOfInt(num);
+  return value;
 }
 
 
