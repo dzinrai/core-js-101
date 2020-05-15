@@ -62,8 +62,17 @@ function getPowerFunction(exponent) {
  *   getPolynom(8)     => y = 8
  *   getPolynom()      => null
  */
-function getPolynom() {
-  throw new Error('Not implemented');
+function getPolynom(...args) {
+  const res = [];
+  args.reverse().forEach((coef, deg) => {
+    const f = (x) => coef * (x ** deg);
+    res.push(f);
+  });
+  return (x) => res.reduce((fx1, fx2) => {
+    const f1 = typeof fx1 === 'function' ? fx1(x) : fx1;
+    const f2 = typeof fx2 === 'function' ? fx2(x) : fx2;
+    return f1 + f2;
+  }, 0);
 }
 
 
@@ -81,8 +90,17 @@ function getPolynom() {
  *   ...
  *   memoizer() => the same random number  (next run, returns the previous cached result)
  */
-function memoize(/* func */) {
-  throw new Error('Not implemented');
+function memoize(func) {
+  const cache = {};
+  return (...args) => {
+    const key = JSON.stringify(args);
+    if (cache[key]) {
+      return cache[key];
+    }
+    const res = func(args);
+    cache[key] = res;
+    return res;
+  };
 }
 
 
@@ -101,8 +119,22 @@ function memoize(/* func */) {
  * }, 2);
  * retryer() => 2
  */
-function retry(/* func, attempts */) {
-  throw new Error('Not implemented');
+function retry(func, attempts) {
+  return () => {
+    let res;
+    try {
+      res = func();
+    } catch (er) {
+      for (let i = 1; i < attempts; i += 1) {
+        try {
+          res = func();
+        // eslint-disable-next-line no-empty
+        } catch (e) {
+        }
+      }
+    }
+    return res;
+  };
 }
 
 
@@ -129,8 +161,24 @@ function retry(/* func, attempts */) {
  * cos(3.141592653589793) ends
  *
  */
-function logger(/* func, logFunc */) {
-  throw new Error('Not implemented');
+function raw(a, par = true) {
+  if (typeof a === 'string') return `"${a}"`;
+  if (Array.isArray(a)) {
+    const arr = a.map((x) => raw(x, true));
+    if (!par) return `${arr}`;
+    return `[${arr}]`;
+  }
+  return a;
+}
+function logger(func, logFunc) {
+  return (...args) => {
+    const start = func.name.concat('(').concat(raw(args, false)).concat(') starts');
+    const end = func.name.concat('(').concat(raw(args, false)).concat(') ends');
+    logFunc(start);
+    const res = func(...args);
+    logFunc(end);
+    return res;
+  };
 }
 
 
