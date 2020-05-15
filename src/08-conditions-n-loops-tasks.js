@@ -353,8 +353,16 @@ function getDigitalRoot(num) {
  *   '{)' = false
  *   '{[(<{[]}>)]}' = true
  */
-function isBracketsBalanced(/* str */) {
-  throw new Error('Not implemented');
+function isBracketsBalanced(str) {
+  let res = str;
+  if (res.split('{}').length > 1 || res.split('[]').length > 1 || res.split('()').length > 1 || res.split('<>').length > 1) {
+    if (res.split('{}').length > 1) res = res.split('{}').join('');
+    else if (res.split('[]').length > 1) res = res.split('[]').join('');
+    else if (res.split('()').length > 1) res = res.split('()').join('');
+    else if (res.split('<>').length > 1) res = res.split('<>').join('');
+    return isBracketsBalanced(res);
+  }
+  return res.length === 0;
 }
 
 
@@ -480,8 +488,37 @@ function getMatrixProduct(m1, m2) {
  *    [    ,   ,    ]]
  *
  */
-function evaluateTicTacToePosition(/* position */) {
-  throw new Error('Not implemented');
+function evaluateTicTacToePosition(position) {
+  let res;
+  if (position[0][0] && position[0][0] === position[1][1]
+    && position[1][1] === position[2][2]) {
+    // eslint-disable-next-line prefer-destructuring
+    res = position[0][0];
+  }
+  if (position[0][2] && position[0][2] === position[1][1]
+    && position[1][1] === position[2][0]) {
+    // eslint-disable-next-line prefer-destructuring
+    res = position[0][2];
+  }
+  if (position[0][0] && position[0][0] === position[1][0]
+    && position[1][0] === position[2][0]) {
+    // eslint-disable-next-line prefer-destructuring
+    res = position[0][0];
+  }
+  if (position[0][1] && position[0][1] === position[1][1]
+    && position[1][1] === position[2][1]) {
+    // eslint-disable-next-line prefer-destructuring
+    res = position[0][1];
+  }
+  if (position[0][2] && position[0][2] === position[1][2]
+    && position[1][2] === position[2][2]) {
+    // eslint-disable-next-line prefer-destructuring
+    res = position[0][2];
+  }
+  position.forEach((line) => {
+    if (line[0] && line[0] === line[1] && line[1] === line[2]) [res] = line;
+  });
+  return res;
 }
 
 
